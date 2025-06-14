@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { View, FlatList, Image, TouchableOpacity } from 'react-native';
-import { FAB, Card, Title, Paragraph } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import styles from '../styles/styles';
+import React, { useEffect, useState } from "react";
+import { View, FlatList, Image, TouchableOpacity } from "react-native";
+import { FAB, Card, Title, Paragraph } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import styles from "../styles/styles";
+import axios from "axios";
 
-const API_URL = 'http://172.26.47.165:3000';
+const API_URL = "http://192.168.15.149:3000";
 
 export default function HomeScreen() {
   const [outfits, setOutfits] = useState([]);
   const navigation = useNavigation();
 
   const fetchData = async () => {
-    const res = await fetch(`${API_URL}/outfits`);
-    const data = await res.json();
-    setOutfits(data);
+    try {
+      const res = await axios.get(`${API_URL}/outfits`);
+      const data = await res.data;
+      setOutfits(data);
+    } catch (error) {
+      console.log(error.response ? error.response.data : error.message);
+    }
   };
 
   useEffect(() => {
@@ -32,13 +37,24 @@ export default function HomeScreen() {
               <Paragraph>{item.description}</Paragraph>
             </Card.Content>
             {item.photo && (
-              <Card.Cover source={{ uri: `${API_URL}/${item.photo}` }} style={styles.image} />
+              <Card.Cover
+                source={{ uri: `${API_URL}/${item.photo}` }}
+                style={styles.image}
+              />
             )}
           </Card>
         )}
       />
-      <FAB icon="plus" style={styles.fab} onPress={() => navigation.navigate('Add Outfit')} />
-      <FAB icon="map" style={styles.mapButton} onPress={() => navigation.navigate('Mapa')} />
+      <FAB
+        icon="plus"
+        style={styles.fab}
+        onPress={() => navigation.navigate("Add Outfit")}
+      />
+      <FAB
+        icon="map"
+        style={styles.mapButton}
+        onPress={() => navigation.navigate("Mapa")}
+      />
     </View>
   );
 }

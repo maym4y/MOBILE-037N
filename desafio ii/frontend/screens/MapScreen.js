@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { View, ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
-const API_URL = 'http://172.26.47.165:3000';
+const API_URL = 'http://192.168.15.149:3000';
 
 export default function MapScreen() {
   const [outfits, setOutfits] = useState([]);
@@ -10,8 +11,8 @@ export default function MapScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`${API_URL}/outfits`);
-      const data = await res.json();
+      const res = await axios.get(`${API_URL}/outfits`);
+      const data = await res.data;
       setOutfits(data);
 
       if (data.length > 0) {
